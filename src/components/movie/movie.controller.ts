@@ -10,40 +10,38 @@ export class MovieController {
   ){}
 
   public getMovies = async (req: Request , res: Response) => {
-    try {
-      let movies = await this.movieRepositoty.getAllMovies()
-      res.json(
-        {
-          status: "success",
-          data: movies
-        }
-      )
-    }
-    catch (e) {
-      console.error(`An error ocurred: ${e}`)
-      res.status(500).json({
-        status: "Failed",
-        error: "Ann error ocurred"
+    let movies: Movie[]
+
+    this.movieRepositoty.getAllMovies()
+      .then(result => {
+        res.json({status: "Success", data: result})
       })
-    }
+      .catch(e => {
+        console.error(`An error ocurred while fetching from database`)
+        this.returnErrorMessage(res)
+      })
   }
 
   public getMovieById = async (req: Request, res: Response) => {
     let id = req.params.id
-    
-    let movie = await this.movieRepositoty.getMovieById(id)
+    let movie: Movie | null
 
-    if (movie){
-      res.json({stauts: "success", data: movie})
-    } else {
-      this.returnFiledOperation(res)
-    }
+    this.movieRepositoty.getMovieById(id)
+      .then(movie => {
+        if (movie) res.json({status: "Success", data: movie})
+        else this.returnFiledOperation(res)
+      })
+      .catch(e => this.returnErrorMessage(res))
   }
 
-  private returnFiledOperation(res: Response) {
+  returnFiledOperation(res: Response) {
     res.json({
       status: "Failed",
       data: null
     })    
+  }
+
+  returnErrorMessage(res: Response) {
+    res.status(500).json({status: "Error", message: "An error ocurred in server"})
   }
 }

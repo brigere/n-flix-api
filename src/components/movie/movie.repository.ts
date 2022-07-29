@@ -11,19 +11,20 @@ export class MovieRespository implements IMovieRepository {
   }
 
   async getMovieById(id: string): Promise<Movie | null> {
-    let isValidId = mongo.ObjectId.isValid(id)
-    
-    if (isValidId) {
-      let movie = await this.movies?.findOne<Movie>(
-        {_id: new mongo.ObjectId(id)}
-      )
-      
-      return movie || null
-    } else {
-      return null
+    try{
+      let isValidId = mongo.ObjectId.isValid(id)
+      if (isValidId) {
+        let movie = await this.movies?.findOne<Movie>(
+          { _id: new mongo.ObjectId(id) }
+        )
+        return movie || null
+  
+      } else {
+        return null
+      }
+    } catch (e) {
+      throw e
     }
-    
-    
   }
 
   async getAllMovies(): Promise<Movie[] | null> {

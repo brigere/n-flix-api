@@ -12,14 +12,18 @@ export class Database {
 
   public async connect() {
     try {
-      let client = new mongo.MongoClient(this.uri)
+      let client = new mongo.MongoClient(
+        this.uri,
+        { connectTimeoutMS: 5000 }
+      )
+
       await client.connect()
       this.connection = await client.db("sample_mflix")
       console.log("Database connected")
     } catch (e) {
       console.error('An error ocurred while connecting to database')
       throw e
-    } 
+    }
 
   }
 
