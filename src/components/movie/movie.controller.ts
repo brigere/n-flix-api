@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { autoInjectable, injectable } from "tsyringe";
+import { autoInjectable } from "tsyringe";
 import { MovieRespository } from "./movie.repository";
 
 @autoInjectable()
@@ -28,7 +28,22 @@ export class MovieController {
     }
   }
 
-  public getMovieById() {
+  public getMovieById = async (req: Request, res: Response) => {
+    let id = req.params.id
     
+    let movie = await this.movieRepositoty.getMovieById(id)
+
+    if (movie){
+      res.json({stauts: "success", data: movie})
+    } else {
+      this.returnFiledOperation(res)
+    }
+  }
+
+  private returnFiledOperation(res: Response) {
+    res.json({
+      status: "Failed",
+      data: null
+    })    
   }
 }

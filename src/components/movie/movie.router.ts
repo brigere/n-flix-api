@@ -14,7 +14,7 @@ export class MovieRouter {
 
   setRoutes() {
     this.routes.get('/:id/description', (req, res) => res.json({ data: req.params.id, description: "Description" }))
-    this.routes.get('/:id', (req, res) => res.json({ data: req.params.id }))
+    this.routes.get('/:id', this.movieController.getMovieById)
     this.routes.get('/', this.movieController.getMovies)
   }
 }
