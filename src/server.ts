@@ -1,5 +1,6 @@
 import express, { Express, NextFunction } from 'express';
 import { RouteDefinition } from './shared/util.types';
+import { validateMongoId } from './shared/validators';
 
 export class ExpressApp {
   private app: Express
@@ -11,10 +12,9 @@ export class ExpressApp {
   }
 
   initDefaultMiddlewares() {
-    this.app.use('/', (req, res, next: NextFunction) => {
-      console.log('new request!')
-      next()
-    })
+    
+    this.app.use('/api', validateMongoId)
+
   }
 
   setRoutes(routes: RouteDefinition[]) {
