@@ -15,7 +15,7 @@ export class MovieRouter {
   }
 
   setRoutes() {
-    // GET /movies/:id/comments?popular=true&author=authorId
+    // GET /movies/:id/comments
     this.routes.get('/:id/comments', this.commentController.getCommentsByMovie)
 
     // GET: movies/:id

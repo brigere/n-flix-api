@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { autoInjectable } from "tsyringe";
 import CommentRepository from "./comment.repository";
-import * as mongo from "mongodb"
 
 @autoInjectable()
 export class CommentController {
@@ -11,13 +10,12 @@ export class CommentController {
   ) { }
 
   public getCommentsByMovie = async (req: Request, res: Response) => {
+    let movieId = req.params.id
 
-    if (req.query.poluar) {
-      res.json({ movieId: req.params.id, popularComments: true })
-    }
-    else {
-      res.json({ movieId: req.params.id, popularComments: false })
-    }
+    this.commentRepository.getAllCommentsByMovie(req.params.id)
+      .then(comments => res.json({ movieId, comments }))
+      .catch(e => res.status(500).json({ status: "Error", message: "An error ocurred in the server" }))
+  
   }
 
 }

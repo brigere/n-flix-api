@@ -12,16 +12,16 @@ export default class CommentRepository implements ICommentRepository {
   }
 
   async getAllCommentsByMovie(movieId: string): Promise<Comment[] | null> {
-    let isValidId = mongo.ObjectId.isValid(movieId)
-    
-    if (!isValidId) throw new Error("Not valid id was provided")
-    
-    let commentsResult = await this.comments?.aggregate<Comment>([
-        { $match: { movie_id: new mongo.ObjectId(movieId) } }  
-    ]).toArray()
-
-    if (commentsResult) return commentsResult
-    else return []
+    try {
+      let commentsResult = await this.comments?.aggregate<Comment>([
+          { $match: { movie_id: new mongo.ObjectId(movieId) } }  
+        ]).toArray()
+      
+      return commentsResult ? commentsResult : []
+    }
+    catch (e) {
+      throw e
+    }
   }
   
   getMostPopularCommentsByMovie(movieId: string): Promise<Comment[]> {
