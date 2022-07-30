@@ -12,9 +12,11 @@ export class ExpressApp {
   }
 
   initDefaultMiddlewares() {
-    
-    this.app.use('/api', validateMongoId)
 
+    this.app.use('/api/movies/:movieid/comments/author/:id', validateMongoId)
+    this.app.use('/api/movies/:movieid/comments/:id', validateMongoId)
+    this.app.use('/api/movies/:id', validateMongoId)
+    
   }
 
   setRoutes(routes: RouteDefinition[]) {
