@@ -9,9 +9,10 @@ config()
 describe("Movie component test", () => {
   let movieRepository: MovieRespository
   let commentRepository: CommentRepository
+  let db: Database
 
   beforeAll(async () => {
-    let db = container.resolve(Database)
+    db = container.resolve(Database)
     await db.connect()
     movieRepository = container.resolve(MovieRespository)
     commentRepository = container.resolve(CommentRepository)
@@ -39,7 +40,9 @@ describe("Movie component test", () => {
   })
 
 
-
+  afterAll(async () => {
+    await db.closeConnection()
+  })
 
 
 
