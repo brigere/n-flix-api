@@ -1,7 +1,7 @@
 class Movie {
   constructor(
-    title: string,
-    plot: string
+    public title: string,
+    public plot: string
   ){}
 }
 

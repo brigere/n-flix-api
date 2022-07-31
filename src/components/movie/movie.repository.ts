@@ -28,7 +28,7 @@ export class MovieRespository implements IMovieRepository {
   }
 
   async getAllMovies(): Promise<Movie[] | null> {
-    let movieResult = await this.movies?.find({}).limit(10).toArray()
+    let movieResult = await this.movies?.find<Movie>({}).limit(10).toArray()
     return movieResult || null
   }
 }
