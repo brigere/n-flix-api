@@ -30,7 +30,6 @@ export class Database {
 
   public async closeConnection() {
     this.client?.close()
-      .then(v => console.log('Database connection closed'))
       .catch(e => { console.log('An error ocurred while cosing connection') })
   }
 
