@@ -4,6 +4,7 @@ import * as mongo from 'mongodb'
 @singleton()
 export class Database {
   private uri: string
+  private client?: mongo.MongoClient
   private connection?: mongo.Db
 
   constructor() {
@@ -12,19 +13,25 @@ export class Database {
 
   public async connect() {
     try {
-      let client = new mongo.MongoClient(
+      this.client = new mongo.MongoClient(
         this.uri,
         { connectTimeoutMS: 5000 }
       )
 
-      await client.connect()
-      this.connection = await client.db("sample_mflix")
+      await this.client.connect()
+      this.connection = await this.client.db("sample_mflix")
       console.log("Database connected")
     } catch (e) {
       console.error('An error ocurred while connecting to database')
       throw e
     }
 
+  }
+
+  public async closeConnection() {
+    this.client?.close()
+      .then(v => console.log('Database connection closed'))
+      .catch(e => { console.log('An error ocurred while cosing connection') })
   }
 
   getConnection() {
