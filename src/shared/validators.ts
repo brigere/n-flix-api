@@ -21,3 +21,11 @@ export const validateMongoId = (req: Request, res: Response, next: NextFunction)
 
 
 }
+
+export const validateSearchDTO = (req: Request, res: Response, next: NextFunction) => {
+  if (req.body.searchField && req.body.keyword) {
+    next()
+  } else {
+    res.status(400).json({status: "failed", message: 'Provide valid body'})
+  }
+}

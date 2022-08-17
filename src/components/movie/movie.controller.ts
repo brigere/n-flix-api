@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { autoInjectable, inject } from "tsyringe";
 import { MovieRespository } from "./movie.repository";
-import { IMovieRepository, MoviePaginateOptoins } from "./movie.types";
+import { IMovieRepository, MoviePaginateOptoins, SearchOptionsDTO } from "./movie.types";
 
 @autoInjectable()
 export class MovieController {
@@ -44,10 +44,10 @@ export class MovieController {
       .catch(e => this.returnErrorMessage(res))
   }
   // TODO: valiadate searchDTO
-  public searchMovies = async (req: Request, res: Response) => {
-    const searchDTO = req.body
+  public searchMovies = async (req: Request, res: Response) => {  
+    const searchDTO = req.body as SearchOptionsDTO
 
-    this.movieRepositoty.searchMovies(searchDTO.title)
+    this.movieRepositoty.searchMovies(searchDTO)
       .then(result => {
         res.json({
           status: 'success',

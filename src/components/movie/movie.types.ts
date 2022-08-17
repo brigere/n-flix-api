@@ -9,7 +9,7 @@ export interface IMovieRepository {
   getMovieById(id: string): Promise<Movie | null>,
   getAllMovies(): Promise<Movie[] | null>
   getMovies(paginateOptions?: MoviePaginateOptoins): Promise<Movie[] | null>
-  searchMovies(title: string): Promise<Movie[] | null>
+  searchMovies(searchOptions: SearchOptionsDTO): Promise<Movie[] | null>
 }
 
 export interface SearchOptions {
@@ -26,4 +26,9 @@ export interface MoviePaginateOptoins {
 export interface MovieQueryOptions {
   searchBy: 'title' | 'cast' | 'director',
   kewords: string[]
+}
+
+export interface SearchOptionsDTO {
+  searchField: string,
+  keyword: string
 }

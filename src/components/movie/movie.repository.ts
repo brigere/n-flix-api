@@ -1,7 +1,7 @@
-import { autoInjectable, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 import * as mongo from 'mongodb'
 import { Database } from "../../shared/database";
-import { IMovieRepository, Movie, MoviePaginateOptoins, SearchOptions } from "./movie.types";
+import { IMovieRepository, Movie, MoviePaginateOptoins, SearchOptionsDTO } from "./movie.types";
 
 @injectable()
 export class MovieRespository implements IMovieRepository {
@@ -12,15 +12,15 @@ export class MovieRespository implements IMovieRepository {
   }
 
   async getMovies(paginateOptions?: MoviePaginateOptoins): Promise<Movie[] | null> {
-    if (!paginateOptions) paginateOptions = defaultPaginateOptions 
+    if (!paginateOptions) paginateOptions = defaultPaginateOptions
 
     let movieresult = this.movies?.aggregate<Movie>([
       { $match: { "imdb.rating": { $gte: 0 } } },
-      { $sort: { "imdb.rating": -1 , "imdb.votes": -1 } },
+      { $sort: { "imdb.rating": -1, "imdb.votes": -1 } },
       { $skip: paginateOptions.limit * paginateOptions.page },
       { $limit: paginateOptions.limit }
     ]).toArray()
-    
+
     return movieresult || null
   }
 
@@ -46,11 +46,11 @@ export class MovieRespository implements IMovieRepository {
     return movieResult || null
   }
 
-  async searchMovies(title: string): Promise<Movie[] | null> {
-    let key = new RegExp(title, 'i')
+  async searchMovies(searchOptions: SearchOptionsDTO): Promise<Movie[] | null> {
+    let key = new RegExp(searchOptions.keyword, 'i')
 
     let result = await this.movies?.aggregate<Movie>([
-      {$match: {title: {$regex: key}}}
+      { $match: { [searchOptions.searchField]: { $regex: key } } }
     ]).toArray()
 
     return result || null

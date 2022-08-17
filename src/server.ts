@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express, { Express } from 'express';
 import { RouteDefinition } from './shared/util.types';
-import { validateMongoId } from './shared/validators';
+import { validateMongoId, validateSearchDTO } from './shared/validators';
 
 export class ExpressApp {
   private app: Express
@@ -14,10 +14,10 @@ export class ExpressApp {
 
   initDefaultMiddlewares() {
     this.app.use(bodyParser.json())
+    this.app.use('/api/movies/search', validateSearchDTO)
     this.app.use('/api/movies/:movieid/comments/author/:id', validateMongoId)
     this.app.use('/api/movies/:movieid/comments/:id', validateMongoId)
-    // this.app.use('/api/movies/:id', validateMongoId)
-    
+    // this.app.use('/api/movies/:id', validateMongoId)  
   }
 
   setRoutes(routes: RouteDefinition[]) {
