@@ -9,6 +9,7 @@ export interface IMovieRepository {
   getMovieById(id: string): Promise<Movie | null>,
   getAllMovies(): Promise<Movie[] | null>
   getMovies(paginateOptions?: MoviePaginateOptoins): Promise<Movie[] | null>
+  searchMovies(title: string): Promise<Movie[] | null>
 }
 
 export interface SearchOptions {

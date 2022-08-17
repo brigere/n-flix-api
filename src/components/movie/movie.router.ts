@@ -14,7 +14,10 @@ export class MovieRouter {
     this.setRoutes()
   }
 
-  setRoutes() {
+  setRoutes() { 
+    // POST: /search
+    this.routes.post('/search', this.movieController.searchMovies)
+    
     // GET /movies/:id/comments
     this.routes.get('/:id/comments', this.commentController.getCommentsByMovie)
 

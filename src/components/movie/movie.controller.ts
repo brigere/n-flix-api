@@ -43,6 +43,20 @@ export class MovieController {
       })
       .catch(e => this.returnErrorMessage(res))
   }
+  // TODO: valiadate searchDTO
+  public searchMovies = async (req: Request, res: Response) => {
+    const searchDTO = req.body
+
+    this.movieRepositoty.searchMovies(searchDTO.title)
+      .then(result => {
+        res.json({
+          status: 'success',
+          count: result? result.length : 0,
+          data: result
+        })
+      })
+      .catch(e => this.returnErrorMessage(res))
+  }
 
   returnFiledOperation(res: Response) {
     res.json({

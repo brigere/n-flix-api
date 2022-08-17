@@ -10,6 +10,7 @@ export class MovieRespository implements IMovieRepository {
   constructor(private db: Database) {
     this.movies = db.getConnection()?.collection('movies')
   }
+
   async getMovies(paginateOptions?: MoviePaginateOptoins): Promise<Movie[] | null> {
     if (!paginateOptions) paginateOptions = defaultPaginateOptions 
 
@@ -45,6 +46,15 @@ export class MovieRespository implements IMovieRepository {
     return movieResult || null
   }
 
+  async searchMovies(title: string): Promise<Movie[] | null> {
+    let key = new RegExp(title, 'i')
+
+    let result = await this.movies?.aggregate<Movie>([
+      {$match: {title: {$regex: key}}}
+    ]).toArray()
+
+    return result || null
+  }
 }
 
 const defaultPaginateOptions: MoviePaginateOptoins = {
