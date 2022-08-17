@@ -1,20 +1,31 @@
 import { Request, Response } from "express";
-import { autoInjectable } from "tsyringe";
+import { autoInjectable, inject } from "tsyringe";
 import { MovieRespository } from "./movie.repository";
+import { IMovieRepository, MoviePaginateOptoins } from "./movie.types";
 
 @autoInjectable()
 export class MovieController {
 
   constructor(
-    private movieRepositoty: MovieRespository
+    @inject(MovieRespository) private movieRepositoty: IMovieRepository
   ){}
 
   public getMovies = async (req: Request , res: Response) => {
-    let movies: Movie[]
+    const paginateOptions: MoviePaginateOptoins = {
+      sort: "rate",
+      page: req.query.page ? Number(req.query.page) : 0,
+      limit: req.query.limit ? Number(req.query.limit) : 20
+    }
 
-    this.movieRepositoty.getAllMovies()
+    this.movieRepositoty.getMovies(paginateOptions)
       .then(result => {
-        res.json({status: "Success", data: result})
+        res.json({
+          status: "Success", 
+          page: paginateOptions.page, 
+          nextPage: req.hostname + req.baseUrl + `?page=${paginateOptions.page + 1}&limit=${paginateOptions.limit}`,
+          count: result?.length, 
+          data: result
+        })
       })
       .catch(e => {
         console.error(`An error ocurred while fetching from database`)
@@ -24,7 +35,6 @@ export class MovieController {
 
   public getMovieById = async (req: Request, res: Response) => {
     let id = req.params.id
-    let movie: Movie | null
 
     this.movieRepositoty.getMovieById(id)
       .then(movie => {
