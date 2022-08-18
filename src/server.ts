@@ -2,6 +2,8 @@ import bodyParser from 'body-parser';
 import express, { Express } from 'express';
 import { RouteDefinition } from './shared/util.types';
 import { validateMongoId, validateSearchDTO } from './shared/validators';
+import swaggerui from 'swagger-ui-express';
+import * as swaggerDocument from './swagger.json'
 
 export class ExpressApp {
   private app: Express
@@ -14,6 +16,7 @@ export class ExpressApp {
 
   initDefaultMiddlewares() {
     this.app.use(bodyParser.json())
+    this.app.use('/api/docs', swaggerui.serve, swaggerui.setup(swaggerDocument))
     this.app.use('/api/movies/search', validateSearchDTO)
     this.app.use('/api/movies/:movieid/comments/author/:id', validateMongoId)
     this.app.use('/api/movies/:movieid/comments/:id', validateMongoId)

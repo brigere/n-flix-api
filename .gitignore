@@ -1,4 +1,6 @@
 dist
+test-swagger.json
+
 # Logs
 logs
 *.log

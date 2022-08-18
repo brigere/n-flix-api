@@ -10,6 +10,8 @@ config()
 async function Main() {
   const database = container.resolve(Database)
   
+
+  
   try {
     await database.connect()
   } catch (e) {
