@@ -4,6 +4,7 @@ import { RouteDefinition } from './shared/util.types';
 import { validateMongoId, validateSearchDTO } from './shared/validators';
 import swaggerui from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json'
+import cors from 'cors'
 
 export class ExpressApp {
   private app: Express
@@ -15,6 +16,7 @@ export class ExpressApp {
   }
 
   initDefaultMiddlewares() {
+    this.app.use(cors())
     this.app.use(bodyParser.json())
     this.app.use('/api/docs', swaggerui.serve, swaggerui.setup(swaggerDocument))
     this.app.use('/api/movies/search', validateSearchDTO)
